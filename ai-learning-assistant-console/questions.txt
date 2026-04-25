@@ -1,0 +1,5 @@
+Java|Beginner|What is the parent class of all classes in Java?|Class,Object,Root,Parent|1|The Object class is the root of the class hierarchy.
+Java|Beginner|Which keyword prevents method overriding?|static,final,private,protected|1|The final keyword prevents overriding.
+DSA|Intermediate|Time complexity of searching in a HashMap?|O(1),O(n),O(log n),O(n^2)|0|Average O(1).
+DSA|Beginner|Which data structure uses LIFO?|Queue,LinkedList,Stack,Tree|2|Stack is LIFO.
+Ethical Hacking|Beginner|What does CIA stand for in Security?|Agency,Confidentiality Integrity Availability,Control,None|1|CIA stands for Confidentiality, Integrity, and Availability.
