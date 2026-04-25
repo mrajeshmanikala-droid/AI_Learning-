@@ -1,0 +1,257 @@
+<main class="flex min-h-screen flex-col md:flex-row font-body text-on-surface bg-surface antialiased">
+  <!-- Left Side: Visual Narrative (Split Screen Hero) -->
+  <section
+    class="hidden md:flex md:w-1/2 relative flex-col justify-between p-16 bg-gradient-to-br from-primary via-secondary to-indigo-800 text-on-primary overflow-hidden">
+    <!-- Background Texture Overlays -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-1/4 -left-12 w-64 h-64 rounded-full bg-secondary-fixed blur-2xl"></div>
+    </div>
+
+    <!-- Branding -->
+    <div class="relative z-10 flex items-center gap-3">
+      <div
+        class="w-10 h-10 bg-surface-container-lowest rounded-xl flex items-center justify-center text-primary shadow-lg">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+      </div>
+      <span class="font-headline font-extrabold text-2xl tracking-tighter">Scholar</span>
+    </div>
+
+    <!-- Hero Text Content -->
+    <div class="relative z-10 max-w-lg">
+      <h1 class="font-headline text-5xl font-extrabold leading-[1.1] editorial-gap mb-8">
+        Welcome Back, Scholar. Continue your journey with AI-curated paths.
+      </h1>
+      <!-- Testimonial -->
+      <div class="bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-xl ai-inner-glow">
+        <p class="font-body text-lg leading-relaxed italic mb-6 text-indigo-50">
+          "The CuratorAI system doesn't just present data; it crafts a narrative journey that respects my learning pace.
+          Returning to my dashboard feels like opening a book exactly where I left off."
+        </p>
+        <div class="flex items-center gap-4">
+          <img alt="Dr. Julian Vance" class="w-12 h-12 rounded-full border-2 border-primary-fixed"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj4rugRpzqKKaNJrLMrK0gDT07cItZ2nLY8_QQEXGYAy8ieWm8y6kSWuOyAbJmLGcsl41c_lR-taj-VE_u_KvqBbNQEPbg0EyzuBjPim8Qt47-IRLQULEocn-IlTkRsvwnb8D_EYnIjzEHPSTKU2wrQCirhsQRZX9mmqVwpc_o_iYcxNxXB1nbxGH4FUOSkbXtt2Ae2fua-dZxlgvia48X7fjSmcu3YAclsD_sxS0boM4Fx1tZn4bf3TkniRBnYv5erB3Mcf9qQaM" />
+          <div>
+            <p class="font-headline font-bold text-base">Dr. Julian Vance</p>
+            <p class="font-label text-xs opacity-70">Senior Research Fellow, MIT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Decorative Element -->
+    <div class="relative z-10">
+      <div class="flex gap-2">
+        <div class="w-12 h-1 bg-white/30 rounded-full"></div>
+        <div class="w-2 h-1 bg-white/10 rounded-full"></div>
+        <div class="w-2 h-1 bg-white/10 rounded-full"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right Side: Login Form -->
+  <section class="w-full md:w-1/2 flex items-center justify-center p-8 md:p-24 bg-surface">
+    <div class="w-full max-w-md flex flex-col">
+      <!-- Mobile Branding (Hidden on Desktop) -->
+      <div class="md:hidden flex items-center gap-3 mb-12">
+        <div
+          class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-on-primary-container shadow-md">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+        </div>
+        <span class="font-headline font-extrabold text-xl tracking-tighter text-on-surface">Scholar</span>
+      </div>
+
+      <div class="mb-10">
+        <h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Login to your account</h2>
+        <p class="text-on-surface-variant font-body">Enter your credentials to access your personalized curriculum.</p>
+      </div>
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+      <div
+        class="mb-6 p-4 bg-error-container text-on-error-container border border-error/20 rounded-xl text-sm font-semibold flex items-start gap-3">
+        <span class="material-symbols-outlined text-error text-xl mt-0.5">error</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+      }
+
+      <form class="space-y-6" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-on-surface-variant ml-1" for="login-email">Email
+            Address</label>
+          <div class="relative group">
+            <input
+              class="w-full px-5 py-4 bg-surface-container-lowest text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all duration-200 outline-none placeholder:text-outline"
+              id="login-email" name="email" placeholder="name@scholar.edu" type="email" [(ngModel)]="credentials.email"
+              required />
+            <div class="absolute inset-0 rounded-xl pointer-events-none border border-outline-variant/15"></div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between items-center px-1">
+            <label class="block text-sm font-semibold text-on-surface-variant" for="login-password">Password</label>
+            <a class="text-xs font-semibold text-primary hover:text-secondary transition-colors duration-200 cursor-pointer"
+              (click)="openForgotPassword()">Forgot password?</a>
+          </div>
+          <div class="relative group">
+            <input
+              class="w-full px-5 py-4 pr-12 bg-surface-container-lowest text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all duration-200 outline-none placeholder:text-outline"
+              id="login-password" name="password" placeholder="••••••••" [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="credentials.password" required />
+            <div class="absolute inset-0 rounded-xl pointer-events-none border border-outline-variant/15"></div>
+            <button
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors z-10"
+              type="button" (click)="togglePasswordVisibility()">
+              <span class="material-symbols-outlined text-xl">{{ showPassword ? 'visibility_off' : 'visibility'
+                }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" [disabled]="loginForm.invalid || isLoading"
+            class="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-headline font-bold text-lg rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+            @if (isLoading) {
+            <span class="material-symbols-outlined animate-spin">progress_activity</span>
+            Verifying...
+            } @else {
+            Login
+            <span class="material-symbols-outlined text-xl">arrow_right_alt</span>
+            }
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-on-surface-variant font-body">
+          Don't have an account?
+          <a class="text-primary font-bold hover:underline underline-offset-4 ml-1" routerLink="/register">Sign up</a>
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-auto pt-16 text-center">
+        <p class="text-[10px] uppercase tracking-widest text-outline font-bold">
+          © 2026 Scholar. All intellectual property reserved.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Forgot Password Modal -->
+<div *ngIf="showForgotPassword" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeForgotPassword()"></div>
+
+  <!-- Modal Content -->
+  <div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="p-6 md:p-8">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h3 class="text-2xl font-headline font-bold text-on-surface">Reset Password</h3>
+          <p class="text-sm text-on-surface-variant mt-1">Get back access to your account.</p>
+        </div>
+        <button (click)="closeForgotPassword()" class="text-on-surface-variant hover:text-primary transition-colors p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div *ngIf="forgotError" class="mb-4 p-3 bg-error-container text-on-error-container text-sm rounded-xl flex items-start gap-2">
+        <span class="material-symbols-outlined text-base">error</span>
+        <span>{{ forgotError }}</span>
+      </div>
+      <div *ngIf="forgotMessage" class="mb-4 p-3 bg-primary-container text-on-primary-container text-sm rounded-xl flex items-start gap-2">
+        <span class="material-symbols-outlined text-base">info</span>
+        <span>{{ forgotMessage }}</span>
+      </div>
+
+      <!-- Step 1: Email -->
+      <div *ngIf="forgotStep === 'email'" class="space-y-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-on-surface-variant ml-1">Email Address</label>
+          <input
+            type="email"
+            class="w-full px-4 py-3 bg-surface-container-low text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+            placeholder="name@scholar.edu"
+            [(ngModel)]="forgotEmail"
+            [disabled]="forgotLoading">
+        </div>
+        <button
+          (click)="sendResetOtp()"
+          [disabled]="forgotLoading"
+          class="w-full py-3 mt-4 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary/90 transition-colors flex justify-center items-center gap-2 disabled:opacity-50">
+          <span *ngIf="forgotLoading" class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+          {{ forgotLoading ? 'Sending...' : 'Send Reset Code' }}
+        </button>
+      </div>
+
+      <!-- Step 2: OTP & New Password -->
+      <div *ngIf="forgotStep === 'otp'" class="space-y-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-on-surface-variant ml-1">Recovery Code</label>
+          <input
+            type="text"
+            class="w-full px-4 py-3 bg-surface-container-low text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-mono tracking-widest text-center text-lg"
+            placeholder="000000"
+            [(ngModel)]="forgotOtp"
+            [disabled]="forgotLoading">
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <div class="flex justify-between items-center px-1">
+             <label class="block text-sm font-semibold text-on-surface-variant">New Password</label>
+          </div>
+          <div class="relative">
+            <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              class="w-full px-4 py-3 bg-surface-container-low text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none pr-10"
+              placeholder="••••••••"
+              [(ngModel)]="forgotNewPassword"
+              [disabled]="forgotLoading">
+            <button
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors"
+              type="button" (click)="showNewPassword = !showNewPassword">
+              <span class="material-symbols-outlined text-lg">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+           <label class="block text-sm font-semibold text-on-surface-variant ml-1">Confirm Password</label>
+           <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              class="w-full px-4 py-3 bg-surface-container-low text-on-surface border-0 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+              placeholder="••••••••"
+              [(ngModel)]="forgotConfirmPassword"
+              [disabled]="forgotLoading">
+        </div>
+
+        <button
+          (click)="resetPassword()"
+          [disabled]="forgotLoading"
+          class="w-full py-3 mt-4 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary/90 transition-colors flex justify-center items-center gap-2 disabled:opacity-50">
+          <span *ngIf="forgotLoading" class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+          {{ forgotLoading ? 'Resetting...' : 'Reset Password' }}
+        </button>
+      </div>
+
+      <!-- Step 3: Success -->
+      <div *ngIf="forgotStep === 'success'" class="text-center py-6">
+        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-3xl">check_circle</span>
+        </div>
+        <h4 class="text-lg font-bold text-on-surface mb-2">Password Reset Complete</h4>
+        <p class="text-sm text-on-surface-variant mb-6">Your password has been successfully updated. You can now login with your new credentials.</p>
+        <button
+          (click)="closeForgotPassword()"
+          class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary/90 transition-colors">
+          Return to Login
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

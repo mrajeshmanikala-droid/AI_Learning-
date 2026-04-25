@@ -1,0 +1,367 @@
+<div class="pt-8 pb-16 px-6 md:px-10 max-w-[1600px] mx-auto">
+  <!-- Welcome Header -->
+  <section class="mb-10">
+    <div class="flex justify-between items-end">
+      <div>
+        <h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Welcome back, <span
+            class="text-primary">{{ firstName }}</span></h1>
+        <p class="text-on-surface-variant font-body">You've completed <span class="text-primary font-bold">{{
+            avgProgress }}%</span> of your curriculum across
+          <span class="text-primary font-bold">{{ courses.length }}</span> active courses.
+        </p>
+      </div>
+      <div class="flex space-x-6">
+        <div class="text-right">
+          <div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Mastery Score</div>
+          <div class="text-3xl font-black font-headline text-primary">{{ masteryScore | number }} <span
+              class="text-sm font-medium text-on-surface-variant">pts</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Bento Grid -->
+  <div class="grid grid-cols-12 gap-8">
+    <!-- Left Content Column -->
+    <div class="col-span-12 lg:col-span-8 space-y-8">
+
+      <!-- AI Featured Card -->
+      <div
+        class="bg-surface-container-lowest rounded-xl p-8 ai-glow relative overflow-hidden group border border-slate-100">
+        <div
+          class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl transition-transform duration-700 group-hover:scale-125">
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-start justify-between mb-8">
+            <div class="flex items-center space-x-4">
+              <div
+                class="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined text-2xl" data-icon="auto_awesome"
+                  style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold font-headline">Intelligent Learning Partner</h2>
+                <p class="text-on-surface-variant text-sm">Adaptive insights based on your recent activity</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface-container-low/50 backdrop-blur-sm rounded-xl p-6 mb-8 border border-white">
+            @if (aiInsightLoading) {
+            <div class="flex items-center gap-3">
+              <div class="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+              <p class="italic text-on-surface/50 leading-relaxed text-lg animate-pulse">Analyzing your learning
+                patterns...</p>
+            </div>
+            } @else {
+            <p class="italic text-on-surface/80 leading-relaxed text-lg">"{{ aiInsight }}"</p>
+            }
+          </div>
+          <div class="flex flex-wrap gap-4">
+            <button routerLink="/my-learning"
+              class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center space-x-2 premium-shadow hover:brightness-110 active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-base" data-icon="bolt">bolt</span>
+              <span>Quick Review</span>
+            </button>
+            @if (courses.length > 0) {
+            <button [routerLink]="['/quiz', courses[0].id]"
+              class="bg-white border border-slate-200 text-on-surface px-6 py-3 rounded-xl font-bold text-sm flex items-center space-x-2 hover:bg-slate-50 transition-all">
+              <span class="material-symbols-outlined text-base" data-icon="quiz">quiz</span>
+              <span>Start Quiz</span>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Courses -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold font-headline">Active Curriculum</h3>
+          <button routerLink="/courses" class="text-primary text-sm font-bold hover:underline flex items-center">
+            View All <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @if (isLoading) {
+          <!-- Skeleton Loading Cards -->
+          <div class="bg-white rounded-xl h-64 animate-pulse border border-slate-100 flex flex-col p-6 premium-shadow">
+            <div class="w-full h-32 bg-slate-200 rounded-lg mb-4"></div>
+            <div class="w-3/4 h-6 bg-slate-200 rounded mb-2"></div>
+            <div class="w-1/2 h-4 bg-slate-200 rounded mb-4"></div>
+            <div class="w-full h-2 bg-slate-200 rounded-full mt-auto"></div>
+          </div>
+          <div class="bg-white rounded-xl h-64 animate-pulse border border-slate-100 flex flex-col p-6 premium-shadow">
+            <div class="w-full h-32 bg-slate-200 rounded-lg mb-4"></div>
+            <div class="w-3/4 h-6 bg-slate-200 rounded mb-2"></div>
+            <div class="w-1/2 h-4 bg-slate-200 rounded mb-4"></div>
+            <div class="w-full h-2 bg-slate-200 rounded-full mt-auto"></div>
+          </div>
+          } @else if (courses.length > 0) {
+          @for (course of courses; track course.id) {
+          <!-- Course Card -->
+          <a [routerLink]="['/courses', course.id]"
+            class="block bg-white rounded-xl overflow-hidden premium-shadow hover:-translate-y-1 transition-all border border-slate-100 group cursor-pointer">
+            <div class="h-40 overflow-hidden relative bg-slate-100">
+              <img [alt]="course.title"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                [src]="course.image" (error)="course.image = '/assets/images/mern-cover.png'" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center text-white">
+                <span class="text-xs font-bold bg-white/20 backdrop-blur-md px-2 py-1 rounded">{{ course.lessons.length
+                  }} Lessons</span>
+                <span class="material-symbols-outlined text-white/80">school</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h4 class="font-bold text-lg mb-2">{{course.title}}</h4>
+              <p class="text-sm text-on-surface-variant mb-6 line-clamp-1">{{course.description}}</p>
+              <div class="space-y-2">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-on-surface-variant">Course Progress</span>
+                  <span class="text-primary">{{course.progress}}%</span>
+                </div>
+                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-primary rounded-full transition-all duration-1000"
+                    [style.width.%]="course.progress"></div>
+                </div>
+              </div>
+            </div>
+          </a>
+          }
+          } @else {
+          <div
+            class="col-span-full py-12 px-6 bg-surface-container-low rounded-xl border border-dashed border-outline-variant/30 text-center">
+            <span class="material-symbols-outlined text-4xl text-outline mb-4 opacity-50">auto_stories</span>
+            <p class="text-on-surface-variant font-bold">No active curriculum found in our database.</p>
+            <p class="text-xs text-outline mt-2">Check back later for new modules.</p>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Learning Path Milestones -->
+      <div class="bg-white rounded-xl p-8 border border-slate-100 premium-shadow">
+        <h3 class="text-xl font-bold font-headline mb-8">Learning Path Milestones</h3>
+        <div class="relative">
+          <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -translate-y-1/2"></div>
+          <div class="relative z-10 flex justify-between">
+            <!-- Onboarding -->
+            <div class="flex flex-col items-center">
+              @if (getMilestoneState('onboarding') === 'completed') {
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg mb-3">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              } @else if (getMilestoneState('onboarding') === 'active') {
+              <div
+                class="w-12 h-12 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center shadow-xl mb-2 -mt-1 scale-110">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+              </div>
+              } @else {
+              <div
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mb-3 opacity-40">
+                <span class="material-symbols-outlined text-sm">lock</span>
+              </div>
+              }
+              <div class="text-[10px] font-bold uppercase tracking-tight"
+                [class.text-primary]="getMilestoneState('onboarding') === 'active'"
+                [class.text-on-surface]="getMilestoneState('onboarding') === 'completed'"
+                [class.text-on-surface-variant]="getMilestoneState('onboarding') === 'locked'">Onboarding</div>
+            </div>
+            <!-- Basics -->
+            <div class="flex flex-col items-center">
+              @if (getMilestoneState('basics') === 'completed') {
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg mb-3">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              } @else if (getMilestoneState('basics') === 'active') {
+              <div
+                class="w-12 h-12 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center shadow-xl mb-2 -mt-1 scale-110">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+              </div>
+              } @else {
+              <div
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mb-3 opacity-40">
+                <span class="material-symbols-outlined text-sm">lock</span>
+              </div>
+              }
+              <div class="text-[10px] font-bold uppercase tracking-tight"
+                [class.text-primary]="getMilestoneState('basics') === 'active'"
+                [class.text-on-surface]="getMilestoneState('basics') === 'completed'"
+                [class.text-on-surface-variant]="getMilestoneState('basics') === 'locked'">Basics</div>
+            </div>
+            <!-- Intermediate -->
+            <div class="flex flex-col items-center">
+              @if (getMilestoneState('intermediate') === 'completed') {
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg mb-3">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              } @else if (getMilestoneState('intermediate') === 'active') {
+              <div
+                class="w-12 h-12 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center shadow-xl mb-2 -mt-1 scale-110">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+              </div>
+              } @else {
+              <div
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mb-3 opacity-40">
+                <span class="material-symbols-outlined text-sm">lock</span>
+              </div>
+              }
+              <div class="text-[10px] font-bold uppercase tracking-tight"
+                [class.text-primary]="getMilestoneState('intermediate') === 'active'"
+                [class.text-on-surface]="getMilestoneState('intermediate') === 'completed'"
+                [class.text-on-surface-variant]="getMilestoneState('intermediate') === 'locked'">Intermediate</div>
+            </div>
+            <!-- Advanced -->
+            <div class="flex flex-col items-center">
+              @if (getMilestoneState('advanced') === 'completed') {
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg mb-3">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              } @else if (getMilestoneState('advanced') === 'active') {
+              <div
+                class="w-12 h-12 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center shadow-xl mb-2 -mt-1 scale-110">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+              </div>
+              } @else {
+              <div
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mb-3 opacity-40">
+                <span class="material-symbols-outlined text-sm">lock</span>
+              </div>
+              }
+              <div class="text-[10px] font-bold uppercase tracking-tight"
+                [class.text-primary]="getMilestoneState('advanced') === 'active'"
+                [class.text-on-surface]="getMilestoneState('advanced') === 'completed'"
+                [class.text-on-surface-variant]="getMilestoneState('advanced') === 'locked'">Advanced</div>
+            </div>
+            <!-- Mastery -->
+            <div class="flex flex-col items-center">
+              @if (getMilestoneState('mastery') === 'completed') {
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg mb-3">
+                <span class="material-symbols-outlined text-sm">check</span>
+              </div>
+              } @else if (getMilestoneState('mastery') === 'active') {
+              <div
+                class="w-12 h-12 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center shadow-xl mb-2 -mt-1 scale-110">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+              </div>
+              } @else {
+              <div
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center mb-3 opacity-40">
+                <span class="material-symbols-outlined text-sm">lock</span>
+              </div>
+              }
+              <div class="text-[10px] font-bold uppercase tracking-tight"
+                [class.text-primary]="getMilestoneState('mastery') === 'active'"
+                [class.text-on-surface]="getMilestoneState('mastery') === 'completed'"
+                [class.text-on-surface-variant]="getMilestoneState('mastery') === 'locked'">Mastery</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Stats Column -->
+    <div class="col-span-12 lg:col-span-4 space-y-8">
+      <!-- Weekly Mastery Detailed -->
+      <div class="bg-white rounded-xl p-8 premium-shadow border border-slate-100">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold font-headline">Weekly Mastery</h3>
+          <span
+            class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">{{
+            courses.length }} Courses</span>
+        </div>
+        <div class="flex justify-center mb-8">
+          <div class="relative w-44 h-44 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90">
+              <circle cx="88" cy="88" fill="transparent" r="76" stroke="#f2f4f6" stroke-width="12"></circle>
+              <circle cx="88" cy="88" fill="transparent" r="76" stroke="url(#sidebarGradient)" stroke-dasharray="477"
+                [attr.stroke-dashoffset]="strokeDashoffset" stroke-linecap="round" stroke-width="12"
+                class="transition-all duration-1000"></circle>
+              <defs>
+                <linearGradient id="sidebarGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4b41e1"></stop>
+                  <stop offset="100%" stop-color="#712ae2"></stop>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="absolute flex flex-col items-center">
+              <span class="text-4xl font-black font-headline tracking-tighter">{{ consistency }}%</span>
+              <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Progress</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <div class="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Focus</div>
+            <div class="text-xl font-bold">{{ weeklyHours }}</div>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <div class="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Lessons</div>
+            <div class="text-xl font-bold text-tertiary">{{ totalLessons }}</div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-on-surface-variant font-medium">Active Courses</span>
+            <span class="font-bold text-primary">{{ courses.length }}</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-on-surface-variant font-medium">Total Modules</span>
+            <span class="font-bold">{{ totalModules }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity Dynamic -->
+      <div class="bg-white rounded-xl p-8 premium-shadow border border-slate-100">
+        <h3 class="text-lg font-bold font-headline mb-6">Recent Activity</h3>
+        <div
+          class="space-y-6 relative before:absolute before:left-5 before:top-2 before:bottom-2 before:w-px before:bg-slate-100">
+          @for (activity of recentActivities; track $index) {
+          <div class="flex space-x-4 relative">
+            <div
+              class="z-10 w-10 h-10 rounded-full border-2 border-white flex items-center justify-center flex-shrink-0 shadow-sm {{ activity.iconBg }} {{ activity.iconColor }}">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">{{
+                activity.icon }}</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div class="text-sm font-bold">{{ activity.title }}</div>
+                <div class="text-[10px] text-outline">{{ activity.time }}</div>
+              </div>
+              <div class="text-xs text-on-surface-variant mt-1 line-clamp-1">{{ activity.detail }}</div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Recommended Content Section -->
+      @if (recommendations.length > 0) {
+      <a [routerLink]="['/courses', recommendations[0].courseId]"
+        class="block bg-gradient-to-br from-slate-900 to-indigo-950 rounded-xl p-6 text-white shadow-xl overflow-hidden relative group cursor-pointer hover:shadow-2xl transition-all">
+        <div class="absolute top-0 right-0 p-4 opacity-20 transition-transform group-hover:scale-110">
+          <span class="material-symbols-outlined text-5xl" data-icon="lightbulb">lightbulb</span>
+        </div>
+        <h4 class="text-sm font-bold uppercase tracking-widest text-indigo-300 mb-4">Recommended</h4>
+        <div class="space-y-4">
+          @for (rec of recommendations; track $index) {
+          <div class="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
+            <div class="text-xs font-bold mb-1 line-clamp-1">{{ rec.title }}</div>
+            <div class="text-[10px] text-white/60">{{ rec.subtitle }}</div>
+          </div>
+          }
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Floating AI Trigger -->
+<button routerLink="/ai-assistant"
+  class="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center orb-glow z-50 hover:scale-110 active:scale-95 transition-all group">
+  <span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform" data-icon="auto_awesome"
+    style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</button>

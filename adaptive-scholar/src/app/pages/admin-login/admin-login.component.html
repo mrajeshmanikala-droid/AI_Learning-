@@ -1,0 +1,100 @@
+<div class="min-h-screen flex items-center justify-center p-6">
+  <!-- Asymmetrical Layout: Main content slightly offset -->
+  <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-12 gap-0 overflow-hidden rounded-2xl shadow-2xl">
+    
+    <!-- Left Side: Educational/Editorial Space (Manrope) -->
+    <div class="md:col-span-7 bg-primary-container p-12 flex flex-col justify-between relative overflow-hidden">
+      <!-- Decorative Backdrop Blur -->
+      <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-20 -right-20 w-80 h-80 bg-primary/20 rounded-full blur-3xl"></div>
+
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-12">
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
+            <i class="pi pi-shield text-primary text-xl"></i>
+          </div>
+          <span class="text-white font-headline font-bold text-xl tracking-tight">Adaptive Scholar</span>
+        </div>
+
+        <h1 class="text-white text-5xl font-headline font-bold leading-tight mb-6">
+          Administrator <br> Portal
+        </h1>
+        <p class="text-white/80 text-lg font-body max-w-md leading-relaxed">
+          The Cognitive Gallery management system. Securely access your administrative dashboard to curate courses and manage the learning ecosystem.
+        </p>
+      </div>
+
+      <div class="relative z-10 pt-12">
+        <div class="flex gap-4 items-center">
+          <div class="flex -space-x-4">
+            <div class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-container-high overflow-hidden">
+              <img src="https://i.pravatar.cc/100?u=1" alt="admin">
+            </div>
+            <div class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-container-high overflow-hidden">
+              <img src="https://i.pravatar.cc/100?u=2" alt="admin">
+            </div>
+          </div>
+          <span class="text-white/60 text-sm font-body italic">Managed by the core academic team</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Login Form (Inter) -->
+    <div class="md:col-span-5 bg-surface-container-lowest p-12 flex flex-col justify-center">
+      <div class="max-w-sm mx-auto w-full">
+        <h2 class="text-2xl font-headline font-bold text-on-surface mb-2">Welcome Back</h2>
+        <p class="text-on-surface-variant text-sm mb-8 font-body">Please enter your specialized credentials.</p>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Input Field: Style defined in spec -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email Address</label>
+            <div class="relative">
+              <input 
+                type="email" 
+                [(ngModel)]="credentials.email" 
+                name="email"
+                required
+                class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary focus:bg-white text-on-surface p-3 transition-all outline-none rounded-t-lg font-body"
+                placeholder="admin@scholar.com">
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Password</label>
+            <div class="relative">
+              <input 
+                type="password" 
+                [(ngModel)]="credentials.password" 
+                name="password"
+                required
+                class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary focus:bg-white text-on-surface p-3 transition-all outline-none rounded-t-lg font-body"
+                placeholder="••••••••">
+            </div>
+          </div>
+
+          @if (error) {
+            <div class="bg-error-container text-on-error-container p-3 rounded-lg text-sm font-body animate-pulse">
+              <i class="pi pi-exclamation-circle mr-2"></i>
+              {{error}}
+            </div>
+          }
+
+          <button 
+            type="submit" 
+            [disabled]="isLoading"
+            class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-lg font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 mt-4 flex items-center justify-center gap-2">
+            @if (isLoading) {
+              <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            }
+            Access Dashboard
+          </button>
+        </form>
+
+        <p class="mt-12 text-center text-on-surface-variant text-xs font-body">
+          Forgot your credentials? <a href="#" class="text-primary font-bold hover:underline">Contact Security</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

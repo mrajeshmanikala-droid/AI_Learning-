@@ -1,0 +1,136 @@
+﻿[33mΓ¥»[39m Building...
+node.exe : C:\Users\poorn\Download
+s\AI_learning\adaptive-scholar\nod
+e_modules\tailwindcss\dist\lib.js:
+38
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo          : Not 
+   Specified: (C:\Users\poorn\..  
+  .\dist\lib.js:38:String) [],    
+ RemoteException
+    + FullyQualifiedErrorId : Nat 
+   iveCommandError
+ 
+${N}`)}}))u.get(b)?.(x);for(let b 
+of m)b(x);if(d){let 
+b=[];for(let[E,N]of x.theme.entrie
+s()){if(N.options&2)continue;let L
+=l(Ae(E),N.value);L.src=N.src,b.pu
+sh(L)}let 
+D=x.theme.getKeyframes();for(let 
+E of D)e.push(de({theme:!0},[W([E]
+)]));d.nodes=[de({theme:!0},b)]}if
+(a|=ot(e,x),a|=Fe(e,x),a|=Te(e,x),
+p){let b=p;b.kind="context",b.cont
+ext={}}return I(e,b=>{if(b.kind===
+"at-rule")return b.name==="@utilit
+y"?R.Replace([]):R.Skip}),{designS
+ystem:x,ast:e,sources:h,root:V,uti
+litiesNode:p,features:a,inlineCand
+idates:w}}async function gn(e,r={}
+){let{designSystem:i,ast:t,sources
+:n,root:a,utilitiesNode:o,features
+:f,inlineCandidates:u}=await 
+mn(e,r);t.unshift(dt(`! 
+tailwindcss v${hr} | MIT License 
+| https://tailwindcss.com 
+`));function c(h){i.invalidCandida
+tes.add(h)}let m=new 
+Set,d=null,p=0,k=!1;for(let h of u
+)i.invalidCandidates.has(h)||(m.ad
+d(h),k=!0);return{sources:n,root:a
+,features:f,build(h){if(f===0)retu
+rn e;if(!o)return 
+d??=Re(t,i,r.polyfills),d;let 
+w=k,A=!1;k=!1;let 
+V=m.size;for(let b of h)if(!i.inva
+lidCandidates.has(b))if(b[0]==="-"
+&&b[1]==="-"){let D=i.theme.markUs
+edVariable(b);w||=D,A||=D}else m.a
+dd(b),w||=m.size!==V;if(!w)return 
+d??=Re(t,i,r.polyfills),d;let x=Ee
+(m,i,{onInvalidCandidate:c}).astNo
+des;return r.from&&I(x,b=>{b.src??
+=o.src}),!A&&p===x.length?(d??=Re(
+t,i,r.polyfills),d):(p=x.length,o.
+nodes=x,d=Re(t,i,r.polyfills),d)}}
+}async function ia(e,r={}){let 
+i=Ve(e,{from:r.from}),t=await gn(i
+,r),n=i,a=e;return{...t,build(o){l
+et f=t.build(o);return f===n||(a=n
+e(f,!!r.from),n=f),a},buildSourceM
+ap(){return fn({ast:n})}}}async 
+function na(e,r={}){return(await m
+n(Ve(e,{from:r.from}),r)).designSy
+stem}function at(){throw new 
+Error("It looks like you're 
+trying to use `tailwindcss` 
+directly as a PostCSS plugin. The 
+PostCSS plugin has moved to a 
+separate package, so to continue 
+using Tailwind CSS with PostCSS 
+you'll need to install 
+`@tailwindcss/postcss` and update 
+your PostCSS 
+configuration.")}for(let e in Ut)e
+!=="default"&&(at[e]=Ut[e]);module
+.exports=at;
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+
+Error: It looks like you're 
+trying to use `tailwindcss` 
+directly as a PostCSS plugin. The 
+PostCSS plugin has moved to a 
+separate package, so to continue 
+using Tailwind CSS with PostCSS 
+you'll need to install 
+`@tailwindcss/postcss` and update 
+your PostCSS configuration.
+    at Object.at [as default] (C:\
+Users\poorn\Downloads\AI_learning\
+adaptive-scholar\node_modules\tail
+windcss\dist\lib.js:38:1643)
+    at StylesheetPluginFactory.ini
+tPostcss (C:\Users\poorn\Downloads
+\AI_learning\adaptive-scholar\node
+_modules\@angular\build\src\tools\
+esbuild\stylesheets\stylesheet-plu
+gin-factory.js:173:66)
+
+Node.js v24.11.1

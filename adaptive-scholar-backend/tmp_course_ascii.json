@@ -1,0 +1,42 @@
+{
+    "id":  1,
+    "title":  "Complete MERN Stack Development",
+    "description":  "Master MongoDB, Express, React, and Node.js with real-world projects.",
+    "image":  "assets/images/mern-cover.png",
+    "progress":  64,
+    "modulesCount":  4,
+    "lessons":  [
+                    {
+                        "id":  1,
+                        "title":  "Mastering React.js Foundations",
+                        "description":  "Understanding the virtual DOM, functional components, and hooks. Build a powerful UI layer.",
+                        "videoUrl":  "H-9l-gTq-C4",
+                        "duration":  "45:30",
+                        "module":  "01: Frontend"
+                    },
+                    {
+                        "id":  2,
+                        "title":  "Node.js \u0026 Server Logic",
+                        "description":  "Dive into the event loop, file systems, and the asynchronous nature of Node.js.",
+                        "videoUrl":  "JR9BeI7FY3M",
+                        "duration":  "38:15",
+                        "module":  "02: Runtime"
+                    },
+                    {
+                        "id":  3,
+                        "title":  "Express.js API Design",
+                        "description":  "Learn middleware, routing, and creating robust RESTful APIs for your MERN applications.",
+                        "videoUrl":  "cUV3uYXEOxI",
+                        "duration":  "42:10",
+                        "module":  "03: Backend"
+                    },
+                    {
+                        "id":  4,
+                        "title":  "MongoDB Data Architecture",
+                        "description":  "Understand NoSQL, Mongoose schemas, and high-performance database management.",
+                        "videoUrl":  "Iw_LHrip-iw",
+                        "duration":  "55:00",
+                        "module":  "04: Database"
+                    }
+                ]
+}

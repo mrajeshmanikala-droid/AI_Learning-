@@ -1,0 +1,77 @@
+<div class="flex h-screen overflow-hidden bg-surface">
+  <!-- Sidebar -->
+  <aside class="w-72 bg-surface-container-low flex flex-col justify-between py-10 px-8">
+    <div>
+      <div class="flex items-center gap-3 mb-16">
+        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white"><i class="pi pi-shield"></i></div>
+        <span class="text-on-surface font-headline font-bold tracking-tight">Admin Console</span>
+      </div>
+      <nav class="space-y-2">
+        <a routerLink="/admin/dashboard" class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:text-primary transition-all font-body text-sm">
+          <i class="pi pi-th-large"></i> Overview
+        </a>
+        <a routerLink="/admin/manage-courses" class="flex items-center gap-4 p-3 rounded-lg bg-surface-container-lowest text-primary shadow-sm font-body text-sm">
+          <i class="pi pi-book"></i> Curriculum Library
+        </a>
+        <a routerLink="/admin/add-course" class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:text-primary transition-all font-body text-sm">
+          <i class="pi pi-plus-circle"></i> Add New Course
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto p-12">
+    <header class="flex justify-between items-center mb-12">
+      <div>
+        <h1 class="text-3xl font-headline font-bold text-on-surface mb-2">Curriculum Library</h1>
+        <p class="text-on-surface-variant font-body">Manage and refine the educational offerings.</p>
+      </div>
+      <button routerLink="/admin/add-course" class="bg-primary text-white px-6 py-3 rounded-lg font-bold text-sm shadow-xl shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm h-min text-white font-black">add</span> NEW COURSE
+      </button>
+    </header>
+
+    @if (isLoading) {
+      <div class="flex items-center justify-center h-64">
+        <div class="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    } @else {
+      <div class="space-y-4">
+        @for (course of courses; track course.id) {
+          <div class="bg-surface-container-lowest p-6 rounded-2xl flex items-center gap-6 group hover:translate-x-2 transition-all">
+            <!-- Course Image Shadow -->
+            <div class="w-24 h-24 rounded-xl overflow-hidden shadow-lg shadow-on-surface/5 flex-shrink-0 bg-surface-container-low">
+              <img [src]="course.image" [alt]="course.title" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] font-bold text-primary uppercase bg-primary-container/10 px-2 py-0.5 rounded-full">ID: {{course.id}}</span>
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase">{{course.modulesCount}} Modules</span>
+              </div>
+              <h3 class="text-xl font-headline font-bold text-on-surface mb-1">{{course.title}}</h3>
+              <p class="text-on-surface-variant text-sm font-body line-clamp-1 max-w-2xl">{{course.description}}</p>
+            </div>
+
+            <div class="flex items-center gap-2 transition-all">
+              <button [routerLink]="['/admin/edit-course', course.id]" class="w-10 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm h-min">edit</span>
+              </button>
+              <button (click)="deleteCourse(course.id)" class="w-10 h-10 rounded-full bg-error-container/10 text-error hover:bg-error transition-all hover:text-white flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm h-min">delete</span>
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <div class="bg-surface-container-low/50 border-2 border-dashed border-outline-variant/20 rounded-2xl p-20 flex flex-col items-center justify-center text-center">
+            <span class="material-symbols-outlined text-5xl text-on-surface-variant/20 mb-6" style="font-variation-settings: 'FILL' 0;">folder_open</span>
+            <h4 class="text-xl font-headline font-bold text-on-surface-variant mb-2">The library is empty.</h4>
+            <p class="text-sm font-body text-on-surface-variant/60 max-w-xs mb-8">Start by seeding your first course to build the scholarship.</p>
+            <button routerLink="/admin/add-course" class="text-primary font-bold hover:underline">Add Course Now &rarr;</button>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

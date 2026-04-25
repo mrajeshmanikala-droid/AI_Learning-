@@ -1,0 +1,152 @@
+<section class="p-6 md:p-12 max-w-7xl mx-auto">
+  <div class="mb-12">
+    <h2 class="text-4xl md:text-5xl font-black font-headline text-on-surface tracking-tight mb-4">Smart Notes</h2>
+    <p class="text-on-surface-variant max-w-2xl font-body leading-relaxed">
+      Transform your raw study materials into structured wisdom. Our AI extracts core concepts, key highlights, and creates a concise summary in seconds.
+    </p>
+  </div>
+
+  <!-- Asymmetric Input/Output Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Input Area -->
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-surface-container-lowest rounded-xl p-1 shadow-sm border border-outline-variant/10">
+        <div class="relative group">
+          <textarea
+            [(ngModel)]="inputText"
+            class="w-full min-h-[500px] p-6 text-on-surface bg-transparent border-none focus:ring-0 font-body leading-relaxed resize-none text-lg outline-none"
+            placeholder="Paste your lecture notes, article text, or study transcripts here..."></textarea>
+          <div class="absolute bottom-4 right-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex gap-2">
+          <!-- PDF Upload -->
+          <input type="file" id="pdfUpload" accept=".pdf" class="hidden" (change)="onFileSelect($event)">
+          <button (click)="pdfUploadEl.click()"
+            class="px-4 py-2 bg-surface-container-high rounded-lg text-sm font-semibold text-on-surface-variant hover:bg-surface-container-highest transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">attach_file</span>
+            {{ pdfFileName ? pdfFileName : 'Upload PDF' }}
+          </button>
+          <input type="file" #pdfUploadEl accept=".pdf" class="hidden" (change)="onFileSelect($event)">
+        </div>
+        <button
+          (click)="generateSummary()"
+          [disabled]="isLoading || !inputText.trim()"
+          class="px-8 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-lg font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+          @if (isLoading) {
+            <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <span>Analyzing...</span>
+          } @else {
+            <span class="material-symbols-outlined">magic_button</span>
+            <span>Generate Summary</span>
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Output Area -->
+    <div class="lg:col-span-5 space-y-6">
+      <!-- Summary Card -->
+      <div class="glass-panel rounded-xl p-8 shadow-sm border border-outline-variant/15 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-headline font-extrabold text-xl text-primary tracking-tight">Key Insights</h3>
+          @if (hasResult) {
+            <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold rounded-full">AI GENERATED</span>
+          } @else {
+            <span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant text-xs font-bold rounded-full">AI READY</span>
+          }
+        </div>
+
+        @if (isLoading) {
+          <!-- Loading State -->
+          <div class="space-y-6 animate-pulse">
+            <div>
+              <div class="h-3 bg-surface-container-high rounded w-1/3 mb-3"></div>
+              <div class="h-3 bg-surface-container-high rounded w-full mb-2"></div>
+              <div class="h-3 bg-surface-container-high rounded w-5/6 mb-2"></div>
+              <div class="h-3 bg-surface-container-high rounded w-4/6"></div>
+            </div>
+            <div>
+              <div class="h-3 bg-surface-container-high rounded w-1/4 mb-4"></div>
+              <div class="space-y-3">
+                <div class="h-3 bg-surface-container-high rounded w-5/6"></div>
+                <div class="h-3 bg-surface-container-high rounded w-4/6"></div>
+                <div class="h-3 bg-surface-container-high rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+        } @else if (hasResult) {
+          <!-- AI Result -->
+          <div class="space-y-8">
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant mb-3">Core Summary</h4>
+              <p class="text-on-surface font-body leading-relaxed text-sm">{{ coreSummary }}</p>
+            </div>
+
+            @if (highlights.length > 0) {
+              <div>
+                <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant mb-4">Critical Highlights</h4>
+                <ul class="space-y-4">
+                  @for (h of highlights; track $index) {
+                    <li class="flex gap-4 group">
+                      <div class="mt-1.5 w-1.5 h-1.5 rounded-full bg-tertiary-container flex-shrink-0 group-hover:scale-150 transition-transform"></div>
+                      <p class="text-sm text-on-surface leading-tight">{{ h }}</p>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (scholarPerspective) {
+              <div class="bg-tertiary-fixed p-5 rounded-lg border border-on-tertiary-fixed-variant/5">
+                <div class="flex items-center gap-2 mb-2 text-on-tertiary-fixed">
+                  <span class="material-symbols-outlined text-lg">lightbulb</span>
+                  <span class="text-xs font-bold font-headline uppercase tracking-wide">Scholar's Perspective</span>
+                </div>
+                <p class="text-sm text-on-tertiary-fixed-variant italic leading-snug">
+                  "{{ scholarPerspective }}"
+                </p>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Default Placeholder -->
+          <div class="space-y-8">
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant mb-3">Core Summary</h4>
+              <p class="text-on-surface-variant font-body leading-relaxed text-sm italic">
+                Paste your notes or upload a PDF, then hit "Generate Summary" to see AI-powered key insights here.
+              </p>
+            </div>
+            <div class="flex flex-col items-center gap-3 py-8 text-center">
+              <span class="material-symbols-outlined text-5xl text-outline/30">description</span>
+              <p class="text-xs text-outline font-bold uppercase tracking-widest">Awaiting Input</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Secondary Insights -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-3 group hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-primary">category</span>
+          <span class="text-xs font-bold text-on-surface-variant uppercase">Taxonomy</span>
+          <span class="text-lg font-headline font-bold">{{ hasResult ? taxonomy : '—' }}</span>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-3 group hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-tertiary">schedule</span>
+          <span class="text-xs font-bold text-on-surface-variant uppercase">Est. Review</span>
+          <span class="text-lg font-headline font-bold">{{ hasResult ? estReview : '—' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Decorative Background -->
+<div class="fixed top-20 right-[-100px] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+<div class="fixed bottom-0 left-[-100px] w-[400px] h-[400px] bg-secondary-container/10 rounded-full blur-[100px] -z-10"></div>

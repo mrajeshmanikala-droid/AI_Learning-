@@ -1,0 +1,153 @@
+<div class="p-6 md:p-10 flex-grow max-w-7xl mx-auto">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+    <div class="max-w-2xl">
+      <h2 class="text-4xl md:text-5xl font-extrabold font-headline text-on-surface tracking-tight leading-tight mb-4">
+        Curated Knowledge <br />
+        <span class="text-primary">Optimized for You.</span>
+      </h2>
+      <p class="text-on-surface-variant text-lg max-w-lg font-body">
+        Deep dive into programming, AI, databases, and more with our adaptive learning paths.
+      </p>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="flex items-center justify-center h-64">
+      <div class="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+    </div>
+  } @else {
+
+    <!-- Bento Grid Courses -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+      <!-- Feature Card (Large) — Only shown when not searching -->
+      @if (!searchQuery() && featuredCourse) {
+        <div
+          class="md:col-span-8 group relative bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 hover:shadow-xl transition-all duration-300 min-h-[350px]">
+          <div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 to-transparent z-10"></div>
+          <img [alt]="featuredCourse.title"
+            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            [src]="featuredCourse.image" />
+          <div class="relative z-20 h-full flex flex-col justify-end p-8 text-white">
+            <div class="mb-4">
+              <span
+                class="bg-tertiary-container text-on-tertiary-container text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full">Elite
+                Track</span>
+            </div>
+            <h3 class="text-3xl font-bold font-headline mb-3 leading-tight">{{featuredCourse.title}}</h3>
+            <p class="text-white/80 max-w-md mb-6 font-body text-sm">{{featuredCourse.description}}</p>
+            <div class="flex items-center gap-6">
+              <button [routerLink]="['/courses', featuredCourse.id]" class="px-8 py-3 primary-gradient rounded-lg font-bold text-sm">Go to Course</button>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary-container">schedule</span>
+                <span class="text-xs font-medium">{{getLessonCount(featuredCourse)}} Lessons</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- First grid card beside the featured -->
+        @if (filteredCourses.length > 0) {
+          <div
+            class="md:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 flex flex-col justify-between hover:translate-y-[-4px] transition-transform">
+            <div>
+              <div class="w-full h-40 rounded-lg overflow-hidden mb-6">
+                <img [alt]="filteredCourses[0].title" class="w-full h-full object-cover"
+                  [src]="filteredCourses[0].image" />
+              </div>
+              <h4 class="text-xl font-bold font-headline mb-2">{{filteredCourses[0].title}}</h4>
+              <p class="text-on-surface-variant text-sm mb-4 line-clamp-2">{{filteredCourses[0].description}}</p>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-on-surface-variant text-xs font-semibold">{{getLessonCount(filteredCourses[0])}} Lessons</span>
+              <button [routerLink]="['/courses', filteredCourses[0].id]"
+                class="p-2 rounded-lg bg-surface-container-low text-primary hover:bg-primary-fixed transition-colors">
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Remaining courses in 3-column grid -->
+        @for (course of filteredCourses.slice(1); track course.id) {
+          <div
+            class="md:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+            <div class="w-full h-48 rounded-lg overflow-hidden mb-6 relative">
+              <img [alt]="course.title" class="w-full h-full object-cover"
+                [src]="course.image" />
+              <div
+                class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-[10px] font-bold text-on-surface-variant">
+                {{course.modulesCount}} Modules</div>
+            </div>
+            <h4 class="text-lg font-bold font-headline mb-2">{{course.title}}</h4>
+            <p class="text-on-surface-variant text-sm mb-6 line-clamp-2">{{course.description}}</p>
+            <button [routerLink]="['/courses', course.id]"
+              class="w-full py-2.5 rounded-lg border border-primary text-primary font-bold text-sm hover:bg-primary-fixed transition-colors">Go to
+              Course</button>
+          </div>
+        }
+      }
+
+      <!-- Search Results Mode -->
+      @if (searchQuery()) {
+        @if (filteredCourses.length === 0) {
+          <div class="md:col-span-12 flex flex-col items-center justify-center py-20 text-center">
+            <span class="material-symbols-outlined text-5xl text-on-surface-variant/20 mb-4">search_off</span>
+            <h4 class="text-xl font-headline font-bold text-on-surface-variant mb-2">No courses found</h4>
+            <p class="text-sm text-on-surface-variant/60 max-w-xs">Try a different keyword like "Python", "SQL", or "Java".</p>
+          </div>
+        } @else {
+          @for (course of filteredCourses; track course.id) {
+            <div
+              class="md:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+              <div class="w-full h-48 rounded-lg overflow-hidden mb-6 relative">
+                <img [alt]="course.title" class="w-full h-full object-cover"
+                  [src]="course.image" />
+                <div
+                  class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-[10px] font-bold text-on-surface-variant">
+                  {{course.modulesCount}} Modules</div>
+              </div>
+              <h4 class="text-lg font-bold font-headline mb-2">{{course.title}}</h4>
+              <p class="text-on-surface-variant text-sm mb-6 line-clamp-2">{{course.description}}</p>
+              <button [routerLink]="['/courses', course.id]"
+                class="w-full py-2.5 rounded-lg border border-primary text-primary font-bold text-sm hover:bg-primary-fixed transition-colors">Go to
+                Course</button>
+            </div>
+          }
+        }
+      }
+
+      <!-- AI CTA -->
+      <div
+        class="md:col-span-12 mt-12 bg-primary text-on-primary rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between overflow-hidden relative">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div class="relative z-10">
+          <h3 class="text-3xl font-bold font-headline mb-2">Don't know where to start?</h3>
+          <p class="text-primary-fixed-dim text-lg mb-6 md:mb-0">Let our AI analyze your goals and build a custom
+            curriculum for you.</p>
+        </div>
+        <button routerLink="/ai-assistant"
+          class="relative z-10 bg-surface-container-lowest text-primary px-10 py-4 rounded-xl font-black font-headline shadow-lg hover:scale-105 transition-transform active:scale-95">
+          Start AI Assessment
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Footer -->
+<footer class="p-10 border-t border-outline-variant/10 bg-surface-container-low">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex flex-col items-center md:items-start">
+      <h5 class="text-indigo-700 font-black text-xl font-headline">Scholar</h5>
+      <p class="text-slate-500 text-xs mt-1">© 2024 The Adaptive Scholar. All rights reserved.</p>
+    </div>
+    <div class="flex gap-8 text-sm font-medium text-slate-500">
+      <a class="hover:text-primary transition-colors" href="#">Curriculum</a>
+      <a class="hover:text-primary transition-colors" href="#">Mentorship</a>
+      <a class="hover:text-primary transition-colors" href="#">Enterprise</a>
+      <a class="hover:text-primary transition-colors" href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
