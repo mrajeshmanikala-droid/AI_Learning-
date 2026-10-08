@@ -15,7 +15,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/progress")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:52270"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:4201", "http://localhost:52270"})
 public class ProgressController {
 
     @Autowired

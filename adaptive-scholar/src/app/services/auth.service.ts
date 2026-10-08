@@ -90,8 +90,8 @@ export class AuthService {
       );
   }
 
-  sendRegistrationOtp(email: string): Observable<{message: string}> {
-    return this.http.post<{message: string}>(`${this.API_URL}/send-otp`, { email });
+  sendRegistrationOtp(email: string): Observable<{message: string, devOtp?: string}> {
+    return this.http.post<{message: string, devOtp?: string}>(`${this.API_URL}/send-otp`, { email });
   }
 
   register(userData: {name: string, email: string, password: string, otpCode: string}): Observable<AuthResponse> {

@@ -62,6 +62,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:4200", 
             "http://127.0.0.1:4200",
+            "http://localhost:4201",
+            "http://127.0.0.1:4201",
             "http://localhost:52270",
             "http://127.0.0.1:52270"
         ));

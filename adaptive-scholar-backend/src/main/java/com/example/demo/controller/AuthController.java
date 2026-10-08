@@ -33,12 +33,20 @@ public class AuthController {
 
     @PostMapping("/send-otp")
     public ResponseEntity<?> sendOtp(@RequestBody SendOtpRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", "Email is required"));
+        }
+        if (userRepository.existsByEmail(request.getEmail().trim().toLowerCase())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", "Email is already registered"));
         }
         
         try {
-            otpService.generateAndSendOtp(request.getEmail());
+            boolean emailSent = otpService.generateAndSendOtp(request.getEmail().trim().toLowerCase());
+            if (!emailSent) {
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(java.util.Map.of(
+                    "message", "Could not send OTP from adaptive283@gmail.com. Check the Gmail App Password in MAIL_APP_PASSWORD."
+                ));
+            }
             return ResponseEntity.ok(java.util.Map.of("message", "OTP sent successfully to " + request.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", e.getMessage()));
@@ -47,27 +55,30 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already registered");
+        String email = request.getEmail() == null ? "" : request.getEmail().trim().toLowerCase();
+        if (email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", "Email is required"));
+        }
+        if (userRepository.existsByEmail(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", "Email is already registered"));
         }
 
         if (request.getOtpCode() == null || request.getOtpCode().trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP code is required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", "OTP code is required"));
         }
 
-        if (!otpService.verifyOtp(request.getEmail(), request.getOtpCode())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
+        if (!otpService.verifyOtp(email, request.getOtpCode())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(java.util.Map.of("message", "Invalid or expired OTP. Use the latest code from your email."));
         }
 
         User user = new User();
         user.setName(request.getName());
-        user.setEmail(request.getEmail());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole("USER"); // Default role
+        user.setRole("USER");
 
         userRepository.save(user);
 
-        // Generate token with role
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
         
         return ResponseEntity.ok(new AuthResponse(token, user));
@@ -121,7 +132,12 @@ public class AuthController {
         }
 
         try {
-            otpService.generateAndSendOtp(email);
+            boolean emailSent = otpService.generateAndSendOtp(email);
+            if (!emailSent) {
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(java.util.Map.of(
+                    "message", "Could not send reset OTP from adaptive283@gmail.com. Check the Gmail App Password in MAIL_APP_PASSWORD."
+                ));
+            }
             return ResponseEntity.ok(java.util.Map.of("message", "Password reset OTP sent to " + email));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", e.getMessage()));

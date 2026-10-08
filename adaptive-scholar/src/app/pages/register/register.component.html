@@ -75,6 +75,13 @@
           <span>{{ errorMessage }}</span>
         </div>
       }
+      <!-- Success Message -->
+      @if (successMessage) {
+        <div class="p-4 bg-green-50 text-green-800 border border-green-200 rounded-xl text-sm font-semibold flex items-start gap-3">
+          <span class="material-symbols-outlined text-green-600 text-xl mt-0.5">check_circle</span>
+          <span>{{ successMessage }}</span>
+        </div>
+      }
 
       <!-- Form -->
       <form class="space-y-6" (ngSubmit)="onSubmit()" #registerForm="ngForm">
@@ -155,6 +162,10 @@
             </label>
           </div>
         } @else {
+          <input type="hidden" name="first_name" [(ngModel)]="firstName" />
+          <input type="hidden" name="last_name" [(ngModel)]="lastName" />
+          <input type="hidden" name="email" [(ngModel)]="email" />
+          <input type="hidden" name="password" [(ngModel)]="password" />
           <!-- OTP Verification Step -->
           <div class="text-center space-y-4 mb-8">
             <div class="mx-auto w-16 h-16 bg-primary-container rounded-full flex items-center justify-center text-primary mt-4">
@@ -173,7 +184,7 @@
                    [(ngModel)]="otpCode" required />
           </div>
           <p class="text-xs text-center text-on-surface-variant pt-2">
-            Didn't receive the code? <button type="button" class="text-primary font-bold hover:underline" (click)="onSubmit()">Resend OTP</button>
+            Didn't receive the code? <button type="button" class="text-primary font-bold hover:underline" (click)="requestOtp()">Resend OTP</button>
           </p>
         }
 
@@ -183,7 +194,7 @@
             <span class="material-symbols-outlined animate-spin">progress_activity</span>
             {{ isOtpSent ? 'Verifying...' : 'Sending OTP...' }}
           } @else {
-            {{ isOtpSent ? 'Verify & Create Account' : 'Create Account' }}
+            {{ isOtpSent ? 'Verify & Create Account' : 'Continue with Email' }}
             <span class="material-symbols-outlined">arrow_forward</span>
           }
         </button>

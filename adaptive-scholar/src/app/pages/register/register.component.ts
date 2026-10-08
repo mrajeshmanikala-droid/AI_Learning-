@@ -30,8 +30,9 @@ export class RegisterComponent {
   password = '';
   showPassword = false;
   errorMessage = '';
+  successMessage = '';
   isLoading = false;
-  
+
   // OTP State
   isOtpSent = false;
   otpCode = '';
@@ -73,33 +74,39 @@ export class RegisterComponent {
     }
   }
 
-  private requestOtp() {
+  requestOtp() {
+    this.email = this.email.trim().toLowerCase();
+    this.otpCode = '';
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
     this.cdr.detectChanges();
 
     this.authService.sendRegistrationOtp(this.email).subscribe({
-      next: () => {
+      next: (res) => {
         this.isLoading = false;
         this.isOtpSent = true;
+        this.successMessage = res.message || 'OTP sent successfully! Check your email.';
         this.cdr.detectChanges();
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error || 'Failed to send OTP. Please check your email and try again.';
+        this.errorMessage = err.error?.message || err.error || 'Failed to send OTP. Please check your email and try again.';
         this.cdr.detectChanges();
       }
     });
   }
 
   private verifyAndRegister() {
-    if (!this.otpCode || this.otpCode.length !== 6) {
+    const otp = (this.otpCode || '').replace(/\D/g, '');
+    if (otp.length !== 6) {
       this.errorMessage = 'Please enter a valid 6-digit OTP code.';
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
     this.cdr.detectChanges();
 
     const fullName = this.capitalizeWords(
@@ -108,9 +115,9 @@ export class RegisterComponent {
 
     const userData = {
       name: fullName,
-      email: this.email,
+      email: this.email.trim().toLowerCase(),
       password: this.password,
-      otpCode: this.otpCode
+      otpCode: otp
     };
 
     this.authService.register(userData).subscribe({
@@ -121,7 +128,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error || 'Registration failed. Invalid or expired OTP.';
+        this.errorMessage = err.error?.message || err.error || 'Registration failed. Invalid or expired OTP.';
         this.cdr.detectChanges();
       }
     });

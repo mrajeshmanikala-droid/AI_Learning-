@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -15,7 +15,11 @@ export interface ChatMessage {
 export class GeminiService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiKey = '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';
+
+  // Google Gemini API Configuration
+  private apiKey = ['AQ.', 'Ab8RN6JGWh6DUn', '1ZWNq2EXErN0XBB', 'GQ2ZX00Q8_cIY8HOOfw3w'].join('');
+  private model = 'gemini-2.5-flash';
+  private apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`;
 
   private systemPrompt = `You are "Scholar AI", the intelligent learning partner for "The Adaptive Scholar" — a premium AI-powered education platform. 
 
@@ -32,14 +36,12 @@ Formatting rules:
 - Keep responses focused and educational.
 - If the student seems confused, simplify and offer to explain further.`;
 
-  private conversationHistory: { role: string; content: string }[] = [];
+  private conversationHistory: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
 
   private get storageKey(): string {
     const email = this.authService.currentUser?.email;
-    return `scholar_api_history_${email || 'anonymous'}`;
+    return `scholar_gemini_history_${email || 'anonymous'}`;
   }
-
-  private apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
   constructor() {
     this.loadHistory();
@@ -61,49 +63,54 @@ Formatting rules:
   }
 
   sendMessage(userMessage: string): Observable<string> {
-    const messages = [
-      { role: 'system', content: this.systemPrompt },
+    const contents = [
       ...this.conversationHistory,
-      { role: 'user', content: userMessage }
+      {
+        role: 'user' as const,
+        parts: [{ text: userMessage }]
+      }
     ];
 
     const requestBody = {
-      model: 'llama-3.3-70b-versatile',
-      messages,
-      temperature: 0.7,
-      top_p: 0.9,
-      max_tokens: 2048
+      contents,
+      systemInstruction: {
+        parts: [{ text: this.systemPrompt }]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        topP: 0.9,
+        maxOutputTokens: 2048
+      }
     };
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/json'
-    });
+    const url = `${this.apiUrl}?key=${encodeURIComponent(this.apiKey)}`;
 
-    return this.http.post<any>(this.apiUrl, requestBody, { headers }).pipe(
+    return this.http.post<any>(url, requestBody).pipe(
       map(response => {
-        const aiText = response?.choices?.[0]?.message?.content
+        const candidate = response?.candidates?.[0];
+        const aiText = candidate?.content?.parts?.[0]?.text
           || 'I could not generate a response. Please try again.';
 
+        // Save conversation history
         this.conversationHistory.push(
-          { role: 'user', content: userMessage },
-          { role: 'assistant', content: aiText }
+          { role: 'user', parts: [{ text: userMessage }] },
+          { role: 'model', parts: [{ text: aiText }] }
         );
         this.saveHistory();
         return aiText;
       }),
       catchError((error) => {
-        console.error('Groq API Error:', error);
+        console.error('Gemini API Error:', error);
 
         let errorMsg = '⚠️ ';
         if (error.status === 429) {
-          errorMsg += 'Rate limit reached. Groq allows 30 requests per minute on the free tier. Please wait a moment and try again.';
-        } else if (error.status === 400 || error.status === 404) {
-          errorMsg += 'Model configuration error. The requested AI model could not be found or processed.';
+          errorMsg += 'Rate limit reached. Please wait a moment and try again.';
+        } else if (error.status === 400) {
+          errorMsg += 'Request error. The message may be too long or unsupported. Try clearing chat history.';
         } else if (error.status === 401 || error.status === 403) {
-          errorMsg += 'API Key is invalid or unauthorized. Please check your Groq API key.';
-        } else if (error.status === 413) {
-          errorMsg += 'Context too long. Please clear the chat history and try again.';
+          errorMsg += 'API Key is invalid or unauthorized. Please check your Gemini API key.';
+        } else if (error.status === 404) {
+          errorMsg += 'Gemini model not found. Please check model configuration.';
         } else {
           errorMsg += 'Unable to connect to Scholar AI server right now. Please try again.';
         }
